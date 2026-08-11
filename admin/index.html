@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PSYDE Admin</title>
+<meta name="theme-color" content="#07040b" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--p:#a855f7;--p2:#6d28d9;--bg:#050406;--panel:#0d0912;--tx:#f7f0ff;--muted:#a99caf;--line:#a855f733;--ok:#4ade80;--bad:#fb7185}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#6d28d922,transparent 28%),var(--bg);color:var(--tx);font-family:Arial,Helvetica,sans-serif;min-height:100vh}button,input,textarea,select{font:inherit}.wrap{max-width:1380px;margin:auto;padding:26px}.brand{font-size:38px;font-weight:1000;letter-spacing:-.08em;color:var(--p);text-shadow:0 0 24px #a855f766}.sub{color:#bbaac4;font-size:12px;letter-spacing:.08em}.card{border:1px solid var(--line);background:#0a0710df;border-radius:24px;padding:22px;box-shadow:0 18px 70px #0008}.login{max-width:470px;margin:10vh auto}.login h1{font-size:54px;margin:10px 0 6px;letter-spacing:-.06em}.field{display:grid;gap:7px;margin:14px 0}.field label{font-size:11px;color:#ceb5dc;font-weight:800;letter-spacing:.06em}.field input,.field textarea,.field select{width:100%;background:#130d19;border:1px solid #a855f744;border-radius:14px;color:white;padding:13px;outline:0}.field textarea{min-height:100px;resize:vertical}.btn{border:0;border-radius:999px;background:var(--p);color:#09050d;font-weight:900;padding:13px 18px;cursor:pointer}.btn.alt{background:transparent;color:#d8b4fe;border:1px solid #a855f755}.btn.danger{background:#fb718522;color:#fecdd3;border:1px solid #fb718555}.top{display:flex;align-items:center;gap:15px;margin-bottom:20px}.top .right{margin-left:auto;display:flex;gap:8px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.stat{border:1px solid var(--line);border-radius:18px;background:#0c0811;padding:16px}.stat b{font-size:25px;color:#cf9cff}.stat span{display:block;color:#8f8197;font-size:10px;margin-top:5px}.layout{display:grid;grid-template-columns:410px 1fr;gap:16px}.form-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.products{display:grid;gap:10px}.product{display:grid;grid-template-columns:72px 1fr auto;gap:13px;align-items:center;border:1px solid var(--line);border-radius:17px;padding:10px;background:#0b0810}.thumb{width:72px;height:72px;border-radius:13px;object-fit:cover;background:#17111e}.product h3{margin:0 0 5px;color:#c782ff}.product p{margin:0;color:#9d90a5;font-size:12px}.pill{display:inline-block;padding:5px 8px;border:1px solid #a855f744;border-radius:999px;font-size:9px;color:#cdb2dd;margin-right:4px}.prod-actions{display:flex;gap:6px}.small{padding:8px 10px;font-size:10px}.message{min-height:20px;margin-top:10px;font-size:12px}.ok{color:var(--ok)}.err{color:var(--bad)}.hidden{display:none!important}.upload{border:1px dashed #a855f766;border-radius:14px;padding:12px;background:#100b16}.preview{width:100%;height:190px;object-fit:cover;border-radius:13px;margin-top:10px;background:#120c18}.empty{text-align:center;color:#8f8197;padding:50px 15px;border:1px dashed #a855f744;border-radius:18px}.switch{display:flex;gap:15px;align-items:center;margin:12px 0}.switch label{font-size:12px;color:#c6b5cf}.switch input{accent-color:var(--p)}@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}}@media(max-width:560px){.wrap{padding:14px}.top{align-items:flex-start}.top .right{flex-direction:column}.stats{grid-template-columns:1fr 1fr}.product{grid-template-columns:58px 1fr}.thumb{width:58px;height:58px}.prod-actions{grid-column:1/-1}.login h1{font-size:44px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section id="loginView" class="login card">
+    <div class="brand">PSYDE</div>
+    <div class="sub">PAINEL ADMINISTRATIVO</div>
+    <h1>Entrar.</h1>
+    <p style="color:#a99caf">Use o e-mail e a senha que você criou no Supabase.</p>
+    <div class="field"><label>E-MAIL</label><input id="email" type="email" autocomplete="username"></div>
+    <div class="field"><label>SENHA</label><input id="password" type="password" autocomplete="current-password"></div>
+    <button class="btn" id="loginBtn">ENTRAR</button>
+    <div id="loginMsg" class="message"></div>
+  </section>
+
+  <section id="appView" class="hidden">
+    <div class="top">
+      <div><div class="brand">PSYDE</div><div class="sub">ADMIN / PRODUTOS</div></div>
+      <div class="right"><button class="btn alt" id="refreshBtn">ATUALIZAR</button><button class="btn alt" id="logoutBtn">SAIR</button></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="sTotal">0</b><span>PRODUTOS</span></div>
+      <div class="stat"><b id="sActive">0</b><span>ATIVOS</span></div>
+      <div class="stat"><b id="sStock">0</b><span>UNIDADES EM ESTOQUE</span></div>
+      <div class="stat"><b id="sFeatured">0</b><span>DESTAQUES</span></div>
+    </div>
+
+    <div class="layout">
+      <div class="card">
+        <h2 id="formTitle" style="margin-top:0">Nova peça</h2>
+        <input type="hidden" id="id">
+        <div class="field"><label>NOME</label><input id="name" placeholder="Ex.: Camiseta PSYDE Eclipse"></div>
+        <div class="field"><label>DESCRIÇÃO</label><textarea id="description" placeholder="Descrição da peça"></textarea></div>
+        <div class="field"><label>CATEGORIA</label><select id="category"><option value="camiseta">Camiseta</option><option value="short">Short</option><option value="bone">Boné</option><option value="tenis">Tênis</option><option value="moletom">Moletom</option><option value="calca">Calça</option><option value="outro">Outro</option></select></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="field"><label>PREÇO</label><input id="price" type="number" min="0" step="0.01" placeholder="129.90"></div><div class="field"><label>ESTOQUE</label><input id="stock" type="number" min="0" step="1" value="0"></div></div>
+        <div class="field"><label>TAMANHOS (separe por vírgula)</label><input id="sizes" placeholder="P, M, G, GG"></div>
+        <div class="field"><label>SELO / BADGE</label><input id="badge" placeholder="NEW DROP"></div>
+        <div class="upload"><div class="field" style="margin:0"><label>FOTO PRINCIPAL</label><input id="image" type="file" accept="image/jpeg,image/png,image/webp,image/avif"></div><img id="preview" class="preview hidden"></div>
+        <div class="switch"><label><input id="active" type="checkbox" checked> Produto ativo</label><label><input id="featured" type="checkbox"> Destaque</label></div>
+        <div class="form-actions"><button class="btn" id="saveBtn">SALVAR PRODUTO</button><button class="btn alt hidden" id="cancelBtn">CANCELAR EDIÇÃO</button></div>
+        <div id="formMsg" class="message"></div>
+      </div>
+      <div class="card">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:15px"><h2 style="margin:0">Produtos</h2><input id="search" placeholder="Pesquisar..." style="margin-left:auto;max-width:270px;background:#130d19;border:1px solid #a855f744;border-radius:999px;color:white;padding:10px 13px"></div>
+        <div id="products" class="products"></div>
+      </div>
+    </div>
+  </section>
+</div>
+<script>
+const SB_URL='https://fvwixwwoecgsmnfoqfae.supabase.co';
+const SB_KEY='sb_publishable_JdrYCUrcHKaCn_2QqJ-zNA_kr1bc1o8';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+const $=id=>document.getElementById(id); let items=[];
+function msg(el,text,ok=false){el.textContent=text;el.className='message '+(ok?'ok':'err')}
+function slugify(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'-'+Date.now().toString(36)}
+async function isAdmin(){const {data:{user}}=await sb.auth.getUser(); if(!user)return false; const {data,error}=await sb.from('admin_users').select('user_id').eq('user_id',user.id).maybeSingle(); return !error&&!!data}
+async function showApp(){const ok=await isAdmin(); if(!ok){await sb.auth.signOut(); msg($('loginMsg'),'Este usuário não é administrador da PSYDE.');return} $('loginView').classList.add('hidden');$('appView').classList.remove('hidden');await loadProducts()}
+$('loginBtn').onclick=async()=>{msg($('loginMsg'),'Entrando...',true);const {error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)return msg($('loginMsg'),error.message);await showApp()}
+$('logoutBtn').onclick=async()=>{await sb.auth.signOut();location.reload()}
+$('refreshBtn').onclick=loadProducts;
+async function loadProducts(){const {data,error}=await sb.from('products').select('*').order('created_at',{ascending:false});if(error){$('products').innerHTML='<div class="empty">Erro ao carregar: '+error.message+'</div>';return}items=data||[];render();stats()}
+function stats(){$('sTotal').textContent=items.length;$('sActive').textContent=items.filter(x=>x.active).length;$('sStock').textContent=items.reduce((a,x)=>a+(x.stock||0),0);$('sFeatured').textContent=items.filter(x=>x.featured).length}
+function money(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
+function render(){const term=$('search').value.trim().toLowerCase();const list=items.filter(x=>(x.name+' '+x.category+' '+(x.description||'')).toLowerCase().includes(term));if(!list.length){$('products').innerHTML='<div class="empty">Nenhum produto encontrado.</div>';return}$('products').innerHTML=list.map(x=>`<div class="product"><img class="thumb" src="${x.image_url||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2272%22 height=%2272%22%3E%3Crect width=%2272%22 height=%2272%22 fill=%22%23130d19%22/%3E%3C/svg%3E'}"><div><h3>${x.name}</h3><p>${money(x.price)} • estoque ${x.stock}</p><div style="margin-top:7px"><span class="pill">${x.category}</span><span class="pill">${x.active?'ATIVO':'OCULTO'}</span>${x.featured?'<span class="pill">DESTAQUE</span>':''}</div></div><div class="prod-actions"><button class="btn alt small" onclick="editItem('${x.id}')">EDITAR</button><button class="btn danger small" onclick="removeItem('${x.id}')">EXCLUIR</button></div></div>`).join('')}
+$('search').oninput=render;
+window.editItem=id=>{const x=items.find(i=>i.id===id);if(!x)return;$('id').value=x.id;$('name').value=x.name;$('description').value=x.description||'';$('category').value=x.category;$('price').value=x.price;$('stock').value=x.stock;$('sizes').value=(x.sizes||[]).join(', ');$('badge').value=x.badge||'';$('active').checked=x.active;$('featured').checked=x.featured;$('preview').src=x.image_url||'';$('preview').classList.toggle('hidden',!x.image_url);$('formTitle').textContent='Editar peça';$('cancelBtn').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'})}
+$('cancelBtn').onclick=resetForm;
+function resetForm(){$('id').value='';$('name').value='';$('description').value='';$('category').value='camiseta';$('price').value='';$('stock').value='0';$('sizes').value='';$('badge').value='';$('active').checked=true;$('featured').checked=false;$('image').value='';$('preview').src='';$('preview').classList.add('hidden');$('formTitle').textContent='Nova peça';$('cancelBtn').classList.add('hidden');$('formMsg').textContent=''}
+$('image').onchange=e=>{const f=e.target.files[0];if(f){$('preview').src=URL.createObjectURL(f);$('preview').classList.remove('hidden')}};
+async function uploadImage(file){if(!file)return null;const ext=(file.name.split('.').pop()||'webp').toLowerCase();const path=`${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;const {error}=await sb.storage.from('product-images').upload(path,file,{upsert:false});if(error)throw error;const {data}=sb.storage.from('product-images').getPublicUrl(path);return data.publicUrl}
+$('saveBtn').onclick=async()=>{try{const name=$('name').value.trim();if(!name)throw new Error('Digite o nome do produto.');const price=Number($('price').value);if(Number.isNaN(price)||price<0)throw new Error('Digite um preço válido.');msg($('formMsg'),'Salvando...',true);const id=$('id').value;let imageUrl=id?(items.find(x=>x.id===id)?.image_url||''):'';const file=$('image').files[0];if(file)imageUrl=await uploadImage(file);const payload={name,description:$('description').value.trim(),category:$('category').value,price,stock:Math.max(0,Number($('stock').value)||0),sizes:$('sizes').value.split(',').map(s=>s.trim()).filter(Boolean),badge:$('badge').value.trim(),image_url:imageUrl,image_urls:imageUrl?[imageUrl]:[],active:$('active').checked,featured:$('featured').checked};let error;if(id){({error}=await sb.from('products').update(payload).eq('id',id))}else{payload.slug=slugify(name);({error}=await sb.from('products').insert(payload))}if(error)throw error;msg($('formMsg'),'Produto salvo com sucesso!',true);resetForm();await loadProducts()}catch(e){msg($('formMsg'),e.message||String(e))}}
+window.removeItem=async id=>{if(!confirm('Excluir este produto?'))return;const {error}=await sb.from('products').delete().eq('id',id);if(error)return alert(error.message);await loadProducts()}
+(async()=>{const {data:{session}}=await sb.auth.getSession();if(session)await showApp()})();
+</script>
+</body></html>
