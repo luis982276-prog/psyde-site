@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PSYDE — Vista o Irreal</title>
+<meta name="theme-color" content="#050306">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23050406'/%3E%3Cpath d='M14 18h29c7 0 11 4 11 10 0 5-3 8-8 10 4 2 6 5 6 9 0 7-5 11-13 11H14V46h24c2 0 3-1 3-3s-1-3-4-3H25V29h17c2 0 3-1 3-3s-1-3-4-3H14V18z' fill='%23a855f7'/%3E%3C/svg%3E">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--p:#a855f7;--p2:#6d28d9;--bg:#050406;--tx:#f7f0ff;--muted:#b9aec1}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--tx);font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
+a{text-decoration:none;color:inherit}button,input{font:inherit}
+.melt{color:var(--p);font-weight:900;letter-spacing:-.08em;text-transform:uppercase;text-shadow:0 0 25px #a855f788;filter:url(#m)}
+#load{position:fixed;inset:0;background:#020103;z-index:99;display:grid;place-items:center}.loadbg{position:absolute;inset:-20%;background:radial-gradient(circle at 30% 45%,#6d28d9,transparent 24%),radial-gradient(circle at 70% 42%,#a855f7,transparent 28%);filter:blur(22px);animation:float 5s ease-in-out infinite alternate}
+.logo{position:relative;font-size:clamp(80px,15vw,210px);line-height:.75}.logo span{display:inline-block;position:relative;color:#a855f7;text-shadow:0 0 30px #a855f7;font-weight:900;letter-spacing:-.13em}.tag{position:relative;text-align:center;margin-top:30px;font-size:11px;letter-spacing:.35em;color:#c8a6ff}.count{position:absolute;right:28px;bottom:24px;font-size:12px;color:#b681ff}@keyframes float{to{transform:translate(4%,-3%) scale(1.1)}}
+nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);width:min(1400px,calc(100% - 24px));min-height:70px;padding:10px 16px 10px 22px;border:1px solid #a855f733;border-radius:22px;background:#07050add;backdrop-filter:blur(18px);z-index:30;display:flex;align-items:center;gap:18px;box-shadow:0 14px 55px #0007}
+.brand{font-size:29px}.links{margin-left:auto;display:flex;gap:20px;font-size:11px;font-weight:800}.navsearch{width:min(310px,25vw);height:44px;border:1px solid #a855f744;border-radius:999px;background:#120c18;display:flex;align-items:center;padding:0 15px;gap:9px}.navsearch input{width:100%;border:0;outline:0;color:#fff;background:transparent;font-size:12px}.navsearch svg{width:17px;opacity:.75}
+.hero{min-height:100vh;padding:145px 5vw 58px;position:relative;display:grid;grid-template-columns:1.08fr .92fr;gap:28px;align-items:center;overflow:hidden}.noise{position:absolute;inset:0;opacity:.14;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.23'/%3E%3C/svg%3E")}.gridlines{position:absolute;inset:0;background-image:linear-gradient(#a855f70b 1px,transparent 1px),linear-gradient(90deg,#a855f70b 1px,transparent 1px);background-size:52px 52px;mask-image:linear-gradient(to bottom,#000,transparent 88%)}.halo{position:absolute;width:55vw;height:55vw;right:-7vw;top:2vh;border-radius:50%;background:radial-gradient(circle,#c084fc55 0,#7c3aed33 35%,transparent 68%);filter:blur(9px)}
+.hero-copy{position:relative;z-index:3;max-width:840px}.eyebrow{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.24em;font-weight:900;color:#d7b5ff}.eyebrow:before{content:"";width:38px;height:1px;background:#a855f7;box-shadow:0 0 15px #a855f7}.hero h1{font-size:clamp(72px,10.2vw,164px);line-height:.71;margin:25px 0 26px}.hero p{max-width:640px;color:#c8bdce;font-size:18px;line-height:1.58}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.btn{display:inline-flex;align-items:center;gap:9px;padding:16px 21px;border-radius:999px;background:#9b5cff;color:#09050d;font-size:10px;font-weight:900;letter-spacing:.08em}.btn.alt{background:transparent;color:#d8b4fe;border:1px solid #a855f74c}.minirow{display:flex;gap:9px;flex-wrap:wrap;margin-top:36px}.mini{padding:10px 12px;border:1px solid #a855f72f;background:#0c0811a8;border-radius:999px;font-size:9px;font-weight:900;letter-spacing:.08em;color:#b99ccb}
+.visual{position:relative;height:min(72vh,710px);z-index:2}.poster{position:absolute;inset:5% 7% 6% 9%;border:1px solid #c084fc3e;border-radius:34px;overflow:hidden;background:#0b0710;transform:rotate(2deg);box-shadow:0 35px 100px #000c}.poster img{width:100%;height:100%;object-fit:cover;filter:saturate(.72) contrast(1.12) brightness(.78)}.poster:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#6d28d91c 0,transparent 38%,#050306dd 100%),radial-gradient(circle at 70% 20%,#a855f733,transparent 30%)}.poster-label{position:absolute;z-index:3;left:28px;bottom:27px;font-size:clamp(40px,5vw,76px);line-height:.78}.floatcard{position:absolute;z-index:5;border:1px solid #b36cff55;background:#09060edb;backdrop-filter:blur(13px);border-radius:18px;padding:15px 17px;box-shadow:0 18px 50px #0007}.fc1{left:-2%;top:12%;transform:rotate(-7deg)}.fc2{right:-1%;top:24%;transform:rotate(7deg)}.fc3{left:3%;bottom:7%;transform:rotate(4deg)}.floatcard b{display:block;color:#dcbcff;font-size:11px;letter-spacing:.1em}.floatcard span{display:block;margin-top:5px;color:#897c91;font-size:9px}.stamp{position:absolute;z-index:4;right:0;bottom:2%;width:124px;height:124px;border-radius:50%;border:1px solid #a855f76b;display:grid;place-items:center;color:#c89cff;font-size:11px;font-weight:900;letter-spacing:.15em;text-align:center;animation:spin 16s linear infinite;background:#08050bc4}@keyframes spin{to{transform:rotate(360deg)}}
+.section{padding:96px 6vw}.section h2{font-size:clamp(46px,7vw,96px);margin:0 0 38px}.cats{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}.cat{border:1px solid #a855f733;background:#0b0810;color:#bf82ff;border-radius:20px;padding:29px 10px;font-weight:900;cursor:pointer;transition:.2s}.cat:hover,.cat.active{background:#241035;border-color:#a855f7;transform:translateY(-2px)}
+.product-top{display:flex;gap:18px;align-items:end;justify-content:space-between;margin-bottom:34px}.product-top h2{margin:0}.searchbig{width:min(420px,100%);height:54px;border:1px solid #a855f744;border-radius:18px;background:#0e0913;display:flex;align-items:center;padding:0 17px;gap:10px}.searchbig input{width:100%;border:0;outline:0;background:transparent;color:white}.searchbig svg{width:19px;opacity:.7}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{border:1px solid #a855f733;border-radius:24px;overflow:hidden;background:#0b0910;transition:.28s}.card:hover{transform:translateY(-6px);border-color:#a855f766;box-shadow:0 22px 60px #0008}
+.pic{height:430px;position:relative;background:#100b16;overflow:hidden;touch-action:pan-y;user-select:none}.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:opacity .32s ease,transform .55s ease,filter .3s;filter:saturate(.8) contrast(1.06)}.pic .back{opacity:0}.card:hover .pic img{transform:scale(1.045);filter:saturate(1)}.pic:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,#08050dd5 100%);pointer-events:none}
+.badge{position:absolute;left:14px;top:14px;z-index:2;padding:8px 10px;border:1px solid #d8b4fe55;background:#08050dbd;backdrop-filter:blur(10px);border-radius:999px;font-size:9px;font-weight:900;letter-spacing:.12em;color:#e8d5ff}.photo-dot{position:absolute;z-index:3;right:14px;bottom:14px;padding:7px 9px;border-radius:999px;background:#08050dba;border:1px solid #d8b4fe44;color:#e8d5ff;font-size:8px;font-weight:900;letter-spacing:.08em}
+.meta{padding:20px}.meta h3{margin:0 0 8px;color:#c078ff;font-size:19px}.meta p{color:#a99daf;font-size:12px;line-height:1.5}.price{margin:10px 0 14px;color:#ead8ff;font-size:15px;font-weight:900}.actions{display:flex;gap:8px}.actions a{flex:1;text-align:center;padding:12px;border-radius:999px;background:#8b5cf6;color:#08050b;font-size:10px;font-weight:900}.actions a:last-child{background:transparent;color:#caa6ff;border:1px solid #a855f744}.empty{display:none;text-align:center;padding:70px 20px;border:1px dashed #a855f744;border-radius:24px;color:#9f92a8}
+.band{padding:42px 0;background:#351055;overflow:hidden;white-space:nowrap;color:#c17cff;font-size:30px;font-weight:900}.mar{display:inline-block;animation:mar 12s linear infinite}@keyframes mar{to{transform:translateX(-50%)}}
+.store{margin:80px 6vw;padding:70px;border:1px solid #a855f733;border-radius:30px;background:#0a0810;position:relative;overflow:hidden}.store h2{font-size:clamp(56px,8vw,112px);line-height:.78;margin:10px 0 24px}.store p{max-width:620px;color:#b9aec1;line-height:1.6}.trust{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}.trust span{padding:10px 12px;border:1px solid #a855f733;border-radius:999px;color:#b79acb;font-size:10px}footer{margin:0 6vw 50px;padding:40px;border:1px solid #a855f733;border-radius:24px;background:#09070d}.foot{font-size:54px}
+@media(hover:hover) and (pointer:fine){.pic.has-back:hover .front{opacity:0}.pic.has-back:hover .back{opacity:1}}
+@media(hover:none),(pointer:coarse){.pic.has-back.show-back .front{opacity:0}.pic.has-back.show-back .back{opacity:1}}
+@media(max-width:1080px){.links{display:none}.navsearch{margin-left:auto;width:min(360px,55vw)}.hero{grid-template-columns:1fr}.visual{height:620px}.cats{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:900px){.cats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.pic{height:min(118vw,560px)}.store{padding:36px;margin:60px 18px}.section{padding:80px 18px}.hero{padding-left:18px;padding-right:18px}.product-top{align-items:stretch;flex-direction:column}.searchbig{width:100%}.visual{height:540px}}
+@media(max-width:560px){nav{top:10px;width:calc(100% - 16px);border-radius:18px;padding:8px 10px 8px 15px}.brand{font-size:24px}.navsearch{width:auto;flex:1;min-width:0}.navsearch input{font-size:11px}.hero{padding-top:120px}.hero h1{font-size:clamp(58px,19vw,88px)}.visual{height:460px}.poster{inset:4% 1% 6% 3%}.fc1{left:0}.fc2{right:-2%}.stamp{width:92px;height:92px;font-size:8px}.cats{grid-template-columns:repeat(2,1fr)}.cat{padding:22px 8px}}
+</style>
+</head>
+<body>
+<svg width="0" height="0"><filter id="m"><feTurbulence type="fractalNoise" baseFrequency=".015 .06" numOctaves="2" seed="8" result="n"><animate attributeName="baseFrequency" values=".015 .06;.022 .04;.015 .06" dur="4s" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="9"/></filter></svg>
+
+<div id="load"><div class="loadbg"></div><div><div class="logo melt"><span>P</span><span>S</span><span>Y</span><span>D</span><span>E</span></div><div class="tag">VISTA O IRREAL</div></div><div class="count">000</div></div>
+
+<nav>
+<a href="#home" class="brand melt">PSYDE</a>
+<div class="links"><a href="#categorias">CATEGORIAS</a><a href="#pecas">PEÇAS</a><a href="#loja">LOJA FÍSICA</a><a href="#sobre">SOBRE</a></div>
+<label class="navsearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="searchTop" type="search" placeholder="Pesquisar peça..."></label>
+</nav>
+
+<main>
+<section id="home" class="hero">
+<div class="noise"></div><div class="gridlines"></div><div class="halo"></div>
+<div class="hero-copy"><div class="eyebrow">PSYDE / STREETWEAR / 2026</div><h1 class="melt">VISTA O<br>IRREAL.</h1><p>Roupa larga, visual pesado e atitude de sobra. A PSYDE é feita pra rua e pra quem faz questão de ser visto.</p><div class="hero-actions"><a class="btn" href="#pecas">EXPLORAR DROP ↘</a><a class="btn alt" href="#loja">COMO COMPRAR</a></div><div class="minirow"><div class="mini">OVERSIZED</div><div class="mini">BAGGY</div><div class="mini">Y2K</div><div class="mini">UNDERGROUND</div><div class="mini">LOJA FÍSICA</div></div></div>
+<div class="visual"><div class="poster"><img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1600&q=94" alt="Editorial de moda streetwear"><div class="poster-label melt">DROP<br>001</div></div><div class="floatcard fc1"><b>NO RULES</b><span>STREET / CULTURE</span></div><div class="floatcard fc2"><b>NEW DROP</b><span>PEÇAS SELECIONADAS</span></div><div class="floatcard fc3"><b>PSYDE®</b><span>VISTA O IRREAL</span></div><div class="stamp">PSYDE • STREET • PSYDE •</div></div>
+</section>
+
+<section id="categorias" class="section"><div class="eyebrow">ESCOLHA SEU ESTILO</div><h2 class="melt">CATEGORIAS</h2><div class="cats"><button class="cat active" data-cat="todos">TUDO</button><button class="cat" data-cat="camiseta">CAMISETAS</button><button class="cat" data-cat="short">SHORTS</button><button class="cat" data-cat="bone">BONÉS</button><button class="cat" data-cat="tenis">TÊNIS</button><button class="cat" data-cat="moletom">MOLETONS</button><button class="cat" data-cat="calca">CALÇAS</button></div></section>
+
+<section id="pecas" class="section">
+<div class="product-top"><div><div class="eyebrow">CURADORIA PSYDE</div><h2 class="melt">PEÇAS</h2></div><label class="searchbig"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="searchCatalog" type="search" placeholder="Digite camiseta, baggy, moletom..."></label></div>
+<div class="grid" id="productGrid"></div>
+<div class="empty" id="empty">Nenhuma peça encontrada.</div>
+</section>
+
+<div class="band"><div class="mar">PSYDE • VISTA O IRREAL • STREET CULTURE • DISTORÇA • PSYDE • VISTA O IRREAL • STREET CULTURE • DISTORÇA •&nbsp;</div></div>
+
+<section id="loja" class="store"><div class="eyebrow">LOJA FÍSICA • ATENDIMENTO DIRETO</div><h2 class="melt">VIU.<br>CURTIU.<br>CHAMA.</h2><p>O site é a vitrine da PSYDE. Você encontra a peça, chama a gente e confirma tamanho, disponibilidade e retirada.</p><div class="trust"><span>✓ LOJA FÍSICA</span><span>✓ WHATSAPP</span><span>✓ INSTAGRAM</span><span>✓ CURADORIA STREETWEAR</span></div></section>
+
+<section id="sobre" class="section"><div class="eyebrow">PSYDE / MANIFESTO</div><h2 class="melt">ESTADO DE<br>MENTE.</h2><p style="max-width:650px;color:#b7abbf;line-height:1.7">A PSYDE nasceu da rua, do caos e da vontade de fazer diferente. Peças pra quem não veio pra se encaixar.</p></section>
+</main>
+
+<footer><div class="foot melt">PSYDE</div><p style="color:#887b92">© 2026 PSYDE • VISTA O IRREAL.</p></footer>
+
+<script>
+const SB_URL='https://fvwixwwoecgsmnfoqfae.supabase.co';
+const SB_KEY='sb_publishable_JdrYCUrcHKaCn_2QqJ-zNA_kr1bc1o8';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+
+const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const money=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+
+let n=0,c=q('.count');
+let t=setInterval(()=>{n+=Math.ceil(Math.random()*5);if(n>=100){n=100;clearInterval(t);setTimeout(()=>{q('#load').style.transition='opacity .6s';q('#load').style.opacity=0;setTimeout(()=>q('#load').remove(),650)},300)}c.textContent=String(n).padStart(3,'0')},45);
+
+let activeCat='todos';
+const norm=s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+function applyFilter(term=''){
+  term=norm(term);let visible=0;
+  qa('.card').forEach(card=>{
+    const catOk=activeCat==='todos'||card.dataset.cat===activeCat;
+    const text=norm(card.dataset.search+' '+card.innerText);
+    const show=catOk&&(!term||text.includes(term));
+    card.style.display=show?'block':'none';
+    if(show)visible++;
+  });
+  q('#empty').style.display=visible?'none':'block';
+}
+
+function bindProductGestures(){
+  qa('.pic.has-back').forEach(pic=>{
+    let sx=0,sy=0,swiped=false;
+    pic.addEventListener('click',()=>{
+      if(matchMedia('(hover: none), (pointer: coarse)').matches && !swiped){
+        pic.classList.toggle('show-back');
+      }
+      swiped=false;
+    });
+    pic.addEventListener('touchstart',e=>{
+      const t=e.changedTouches[0];sx=t.clientX;sy=t.clientY;swiped=false;
+    },{passive:true});
+    pic.addEventListener('touchend',e=>{
+      const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;
+      if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)){
+        pic.classList.toggle('show-back');
+        swiped=true;
+        e.preventDefault();
+      }
+    },{passive:false});
+  });
+}
+
+async function loadProducts(){
+  const grid=q('#productGrid');
+  grid.innerHTML='<div style="grid-column:1/-1;color:#9f92a8;padding:30px 0">Carregando peças...</div>';
+
+  const {data,error}=await sb.from('products')
+    .select('id,name,description,category,price,badge,image_url,hover_image_url,sizes,stock,whatsapp_url,instagram_url,featured,sort_order,created_at')
+    .eq('active',true)
+    .order('sort_order',{ascending:true})
+    .order('created_at',{ascending:false});
+
+  if(error){
+    grid.innerHTML='<div style="grid-column:1/-1;color:#fb7185;padding:30px 0">Não foi possível carregar as peças.</div>';
+    console.error(error);
+    return;
+  }
+
+  const items=data||[];
+  grid.innerHTML=items.map(p=>{
+    const front=p.image_url||'';
+    const back=p.hover_image_url||'';
+    const hasBack=!!back;
+    const wa=p.whatsapp_url||'#loja';
+    const ig=p.instagram_url||'#loja';
+    const desc=p.description||'';
+
+    return `<article class="card" data-cat="${esc(p.category||'outro')}" data-search="${esc((p.name||'')+' '+(p.category||'')+' '+desc+' '+(p.sizes||[]).join(' '))}">
+      <div class="pic ${hasBack?'has-back':''}">
+        ${p.badge?`<span class="badge">${esc(p.badge)}</span>`:''}
+        ${front?`<img class="front" src="${esc(front)}" alt="${esc(p.name||'Produto PSYDE')} - frente" loading="lazy">`:'<div style="position:absolute;inset:0;display:grid;place-items:center;color:#6f6078">SEM FOTO</div>'}
+        ${hasBack?`<img class="back" src="${esc(back)}" alt="${esc(p.name||'Produto PSYDE')} - verso" loading="lazy"><span class="photo-dot">FRENTE / VERSO</span>`:''}
+      </div>
+      <div class="meta">
+        <h3>${esc(p.name||'PEÇA PSYDE')}</h3>
+        <p>${esc(desc)}</p>
+        <div class="price">${money(p.price)}</div>
+        <div class="actions">
+          <a href="${esc(wa)}" ${wa.startsWith('http')?'target="_blank" rel="noopener"':''}>WHATSAPP</a>
+          <a href="${esc(ig)}" ${ig.startsWith('http')?'target="_blank" rel="noopener"':''}>INSTAGRAM</a>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+
+  bindProductGestures();
+  applyFilter(q('#searchCatalog').value);
+}
+
+qa('.cat').forEach(b=>b.onclick=()=>{
+  qa('.cat').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  activeCat=b.dataset.cat;
+  applyFilter(q('#searchCatalog').value);
+  q('#pecas').scrollIntoView({behavior:'smooth'});
+});
+
+const topSearch=q('#searchTop'),catSearch=q('#searchCatalog');
+function sync(v,s){
+  if(s!=='top')topSearch.value=v;
+  if(s!=='cat')catSearch.value=v;
+  activeCat='todos';
+  qa('.cat').forEach(x=>x.classList.toggle('active',x.dataset.cat==='todos'));
+  applyFilter(v);
+}
+topSearch.addEventListener('input',e=>sync(e.target.value,'top'));
+catSearch.addEventListener('input',e=>sync(e.target.value,'cat'));
+topSearch.addEventListener('keydown',e=>{if(e.key==='Enter')q('#pecas').scrollIntoView({behavior:'smooth'})});
+
+addEventListener('mousemove',e=>{
+  if(innerWidth<900)return;
+  const x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5;
+  const p=q('.poster');
+  if(p)p.style.transform=`rotate(${2+x*1.6}deg) translate(${x*8}px,${y*8}px)`;
+});
+
+loadProducts();
+</script>
+</body>
+</html>
